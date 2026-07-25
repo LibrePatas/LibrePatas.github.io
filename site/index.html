@@ -1,0 +1,428 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>LibrePatas — Hackathon Presentation + Survey</title>
+  <script src="https://cdn.jsdelivr.net/npm/chart.js@4"></script>
+  <style>
+    @import url('https://fonts.googleapis.com/css2?family=Instrument+Serif:ital@0;1&display=swap');
+    :root {
+      --peach: #F5935A;
+      --mint: #ABE9E1;
+      --pink: #F19ADC;
+      --cyan: #7BE2EF;
+      --ink: #21161f;
+      --ink-muted: rgba(33, 22, 31, 0.68);
+    }
+    * { margin: 0; padding: 0; box-sizing: border-box; }
+    html, body { width: 100%; font-family: Inter, ui-sans-serif, system-ui, -apple-system, BlinkMacSystemFont, "Segoe UI", sans-serif; background: #fff7f1; color: var(--ink); overflow-x: hidden; }
+    .slide { position: relative; min-height: 100vh; width: 100%; display: flex; flex-direction: column; align-items: center; justify-content: center; padding: 60px 40px; overflow: hidden; }
+    .slide::before, .slide::after { content: ""; position: absolute; border-radius: 50%; pointer-events: none; filter: blur(60px); opacity: 0.5; }
+    .slide-1 { background: radial-gradient(circle at 10% 13%, rgba(245, 147, 90, 0.92) 0%, transparent 52%), radial-gradient(circle at 88% 15%, rgba(171, 233, 225, 0.96) 0%, transparent 55%), radial-gradient(circle at 82% 80%, rgba(123, 226, 239, 0.56) 0%, transparent 42%), radial-gradient(circle at 22% 86%, rgba(241, 154, 220, 0.48) 0%, transparent 42%), linear-gradient(145deg, #fff8f2 0%, #f7fffc 48%, #fff6fc 100%); }
+    .slide-1::before { width: min(50vw, 600px); aspect-ratio: 1; top: 5%; left: -10%; background: radial-gradient(circle, rgba(245, 147, 90, 0.8), transparent 68%); }
+    .slide-1::after { width: min(46vw, 560px); aspect-ratio: 1; right: -8%; bottom: 0; background: radial-gradient(circle, rgba(171, 233, 225, 0.8), transparent 68%); }
+    .slide-2 { background: radial-gradient(circle at 8% 20%, rgba(241, 154, 220, 0.54) 0%, transparent 44%), radial-gradient(circle at 90% 80%, rgba(123, 226, 239, 0.48) 0%, transparent 44%), linear-gradient(180deg, #fff8f4 0%, #f5fbfa 50%, #fff6fc 100%); }
+    .slide-2::before { width: min(40vw, 500px); aspect-ratio: 1; top: -8%; left: -6%; background: radial-gradient(circle, rgba(241, 154, 220, 0.6), transparent 68%); }
+    .slide-2::after { width: min(40vw, 500px); aspect-ratio: 1; right: -6%; bottom: -8%; background: radial-gradient(circle, rgba(123, 226, 239, 0.6), transparent 68%); }
+    .slide-3 { background: radial-gradient(circle at 12% 16%, rgba(245, 147, 90, 0.48) 0%, transparent 42%), radial-gradient(circle at 86% 22%, rgba(171, 233, 225, 0.52) 0%, transparent 42%), radial-gradient(circle at 76% 76%, rgba(123, 226, 239, 0.30) 0%, transparent 34%), radial-gradient(circle at 28% 84%, rgba(241, 154, 220, 0.28) 0%, transparent 34%), linear-gradient(145deg, #fff9f5 0%, #f4fbf9 50%, #fff8fb 100%); }
+    .slide-3::before { width: min(38vw, 460px); aspect-ratio: 1; top: 2%; left: -6%; background: radial-gradient(circle, rgba(245, 147, 90, 0.7), transparent 68%); }
+    .slide-3::after { width: min(42vw, 520px); aspect-ratio: 1; right: -4%; bottom: 2%; background: radial-gradient(circle, rgba(171, 233, 225, 0.7), transparent 68%); }
+    .slide-4 { background: radial-gradient(circle at 16% 14%, rgba(241, 154, 220, 0.42) 0%, transparent 44%), radial-gradient(circle at 74% 88%, rgba(123, 226, 239, 0.36) 0%, transparent 44%), linear-gradient(145deg, #fff7f4 0%, #f5fbfa 48%, #fff5fc 100%); }
+    .slide-4::before { width: min(36vw, 440px); aspect-ratio: 1; top: -4%; left: -8%; background: radial-gradient(circle, rgba(241, 154, 220, 0.55), transparent 68%); }
+    .slide-4::after { width: min(40vw, 480px); aspect-ratio: 1; right: -6%; bottom: -6%; background: radial-gradient(circle, rgba(123, 226, 239, 0.5), transparent 68%); }
+    .slide-5 { background: radial-gradient(circle at 22% 84%, rgba(245, 147, 90, 0.38) 0%, transparent 42%), radial-gradient(circle at 78% 18%, rgba(171, 233, 225, 0.44) 0%, transparent 42%), linear-gradient(145deg, #fffaf5 0%, #f2fbf9 48%, #fff7fc 100%); }
+    .slide-5::before { width: min(34vw, 420px); aspect-ratio: 1; top: -2%; left: -4%; background: radial-gradient(circle, rgba(245, 147, 90, 0.5), transparent 68%); }
+    .slide-5::after { width: min(38vw, 460px); aspect-ratio: 1; right: -2%; bottom: -4%; background: radial-gradient(circle, rgba(171, 233, 225, 0.55), transparent 68%); }
+    .text-block { font-size: 15px; line-height: 1.8; color: var(--ink-muted); max-width: 640px; }
+    .mono { font-family: "SF Mono", "Cascadia Code", "JetBrains Mono", monospace; font-size: 13px; background: rgba(33,22,31,0.06); border-radius: 8px; padding: 12px 16px; color: var(--ink); }
+    .content { position: relative; z-index: 2; width: 100%; max-width: 960px; text-align: center; }
+    .content.left { text-align: left; }
+    .content.wide { max-width: 1100px; }
+    .pill { display: inline-flex; align-items: center; gap: 8px; border-radius: 999px; padding: 8px 16px; font-size: 13px; font-weight: 500; margin-bottom: 24px; background: radial-gradient(circle at 18% 0%, rgba(255, 255, 255, 0.50), transparent 38%), linear-gradient(135deg, rgba(241, 154, 220, 0.43), rgba(123, 226, 239, 0.45)), rgba(255, 255, 255, 0.09); border: 1px solid rgba(255, 255, 255, 0.64); backdrop-filter: blur(26px) saturate(205%); -webkit-backdrop-filter: blur(26px) saturate(205%); box-shadow: inset 0 1px 0 rgba(255, 255, 255, 0.84), 0 0 18px rgba(241, 154, 220, 0.30), 0 16px 38px rgba(73, 48, 67, 0.11); color: rgba(33, 22, 31, 0.84); }
+    .title { font-family: "Instrument Serif", serif; font-size: clamp(3.6rem, 8vw, 7rem); font-weight: 400; line-height: 0.92; letter-spacing: -0.055em; margin-bottom: 28px; background: linear-gradient(110deg, #35212f 2%, #d76e3f 36%, #279d98 68%, #35212f 100%); -webkit-background-clip: text; background-clip: text; color: transparent; }
+    .title.sm { font-size: clamp(2rem, 3.5vw, 2.8rem); }
+    .subtitle { font-size: clamp(1rem, 2vw, 1.3rem); line-height: 1.7; color: var(--ink-muted); max-width: 640px; margin: 0 auto 36px; }
+    .subtitle.left { margin: 0 0 36px; }
+    .btn { display: inline-flex; align-items: center; gap: 8px; border-radius: 999px; padding: 14px 36px; font-size: 15px; font-weight: 500; border: 1px solid rgba(255, 255, 255, 0.72); cursor: pointer; transition: transform 180ms ease, background 180ms ease, box-shadow 180ms ease; text-decoration: none; }
+    .btn-primary { background: linear-gradient(135deg, #F19ADC 0%, #7BE2EF 100%); color: #251923; box-shadow: inset 0 1px 0 rgba(255, 255, 255, 0.68), 0 0 20px rgba(241, 154, 220, 0.42), 0 0 36px rgba(123, 226, 239, 0.34), 0 14px 30px rgba(73, 48, 67, 0.14); }
+    .btn-primary:hover { transform: translateY(-2px); background: linear-gradient(135deg, #F5A7E3 0%, #8DEAF4 100%); }
+    .btn-secondary { background: radial-gradient(circle at 18% 0%, rgba(255, 255, 255, 0.52), transparent 38%), linear-gradient(135deg, rgba(241, 154, 220, 0.32), rgba(123, 226, 239, 0.34)), rgba(255, 255, 255, 0.09); backdrop-filter: blur(20px) saturate(160%); -webkit-backdrop-filter: blur(20px) saturate(160%); color: rgba(33, 22, 31, 0.84); box-shadow: inset 0 1px 0 rgba(255, 255, 255, 0.72), 0 8px 22px rgba(74, 48, 58, 0.08); }
+    .btn-secondary:hover { transform: translateY(-2px); background: radial-gradient(circle at 18% 0%, rgba(255, 255, 255, 0.64), transparent 39%), linear-gradient(135deg, rgba(241, 154, 220, 0.46), rgba(123, 226, 239, 0.48)), rgba(255, 255, 255, 0.12); border-color: rgba(255, 255, 255, 0.78); }
+    .actions { display: flex; align-items: center; justify-content: center; gap: 14px; flex-wrap: wrap; }
+    .actions.left { justify-content: flex-start; }
+    .nav { position: fixed; bottom: 32px; left: 50%; transform: translateX(-50%); z-index: 100; display: flex; gap: 12px; background: radial-gradient(circle at 18% 0%, rgba(255, 255, 255, 0.52), transparent 38%), linear-gradient(135deg, rgba(241, 154, 220, 0.28), rgba(123, 226, 239, 0.30)), rgba(255, 255, 255, 0.12); backdrop-filter: blur(26px) saturate(205%); -webkit-backdrop-filter: blur(26px) saturate(205%); border: 1px solid rgba(255, 255, 255, 0.64); border-radius: 999px; padding: 10px 20px; box-shadow: inset 0 1px 0 rgba(255, 255, 255, 0.84), 0 0 18px rgba(241, 154, 220, 0.24), 0 16px 38px rgba(73, 48, 67, 0.11); }
+    .nav a { display: flex; align-items: center; justify-content: center; width: 36px; height: 36px; border-radius: 50%; font-size: 14px; font-weight: 600; color: rgba(33, 22, 31, 0.6); text-decoration: none; transition: background 180ms ease, color 180ms ease; }
+    .nav a:hover, .nav a.active { background: rgba(255, 255, 255, 0.4); color: var(--ink); }
+    .grid-2 { display: grid; grid-template-columns: 1fr 1fr; gap: 40px; margin-top: 20px; }
+    .card { border-radius: 28px; padding: 32px; background: radial-gradient(circle at 16% 2%, rgba(255, 255, 255, 0.48), transparent 37%), linear-gradient(135deg, rgba(245, 147, 90, 0.34) 0%, rgba(205, 190, 159, 0.20) 48%, rgba(171, 233, 225, 0.38) 100%), rgba(255, 255, 255, 0.08); border: 1px solid rgba(255, 255, 255, 0.58); backdrop-filter: blur(32px) saturate(195%); -webkit-backdrop-filter: blur(32px) saturate(195%); box-shadow: inset 0 1px 0 rgba(255, 255, 255, 0.82), 0 18px 44px rgba(245, 147, 90, 0.13), 0 28px 62px rgba(171, 233, 225, 0.12); }
+    .card-title { font-size: 15px; font-weight: 600; margin-bottom: 10px; }
+    .card-text { font-size: 15px; line-height: 1.7; color: var(--ink-muted); }
+    .card-icon { width: 44px; height: 44px; border-radius: 999px; display: inline-flex; align-items: center; justify-content: center; margin-bottom: 20px; font-size: 20px; background: radial-gradient(circle at 18% 0%, rgba(255, 255, 255, 0.50), transparent 38%), linear-gradient(135deg, rgba(241, 154, 220, 0.43), rgba(123, 226, 239, 0.45)), rgba(255, 255, 255, 0.09); border: 1px solid rgba(255, 255, 255, 0.64); box-shadow: inset 0 1px 0 rgba(255, 255, 255, 0.84); }
+    .grid-3 { display: grid; grid-template-columns: 1fr 1fr 1fr; gap: 20px; margin-top: 20px; }
+    .grid-4 { display: grid; grid-template-columns: 1fr 1fr; gap: 20px; margin-top: 16px; }
+    .tag { display: inline-block; border-radius: 999px; padding: 4px 14px; font-size: 13px; font-weight: 500; background: rgba(241, 154, 220, 0.18); color: var(--ink); margin-bottom: 10px; }
+    .tag.green { background: rgba(171, 233, 225, 0.30); }
+    .tag.orange { background: rgba(245, 147, 90, 0.22); }
+    .divider { width: 60px; height: 3px; border-radius: 3px; background: linear-gradient(90deg, var(--pink), var(--cyan)); margin: 0 auto 20px; }
+    .divider.left { margin: 0 0 20px; }
+    .slide-counter { position: fixed; top: 24px; right: 28px; z-index: 100; font-size: 14px; font-weight: 500; color: var(--ink-muted); font-variant-numeric: tabular-nums; }
+    .logo { position: fixed; top: 24px; left: 28px; z-index: 100; font-weight: 600; font-size: 16px; color: var(--ink); display: flex; align-items: center; gap: 8px; }
+    .logo-dot { width: 10px; height: 10px; border-radius: 50%; background: linear-gradient(135deg, var(--pink), var(--cyan)); }
+    .problem-list { list-style: none; display: grid; grid-template-columns: 1fr 1fr; gap: 12px 32px; text-align: left; }
+    .problem-list li { display: flex; align-items: flex-start; gap: 10px; font-size: 15px; line-height: 1.6; color: var(--ink-muted); }
+    .problem-list li::before { content: ""; width: 6px; height: 6px; min-width: 6px; border-radius: 50%; margin-top: 8px; background: linear-gradient(135deg, var(--pink), var(--cyan)); }
+    .chain-flow { display: flex; align-items: center; justify-content: center; gap: 10px; flex-wrap: wrap; margin: 28px 0 16px; }
+    .chain-step { display: flex; align-items: center; gap: 6px; border-radius: 999px; padding: 10px 20px; font-size: 14px; font-weight: 500; background: radial-gradient(circle at 18% 0%, rgba(255, 255, 255, 0.50), transparent 38%), linear-gradient(135deg, rgba(241, 154, 220, 0.30), rgba(123, 226, 239, 0.32)), rgba(255, 255, 255, 0.09); border: 1px solid rgba(255, 255, 255, 0.64); backdrop-filter: blur(20px) saturate(160%); -webkit-backdrop-filter: blur(20px) saturate(160%); }
+    .chain-arrow { font-size: 18px; color: var(--ink-muted); }
+    .info-row { display: flex; gap: 32px; justify-content: center; flex-wrap: wrap; margin-top: 24px; }
+    .info-item { text-align: center; }
+    .info-label { font-size: 13px; color: var(--ink-muted); margin-bottom: 4px; }
+    .info-value { font-size: 20px; font-weight: 600; font-family: "Instrument Serif", serif; background: linear-gradient(110deg, #35212f, #d76e3f, #279d98, #35212f); -webkit-background-clip: text; background-clip: text; color: transparent; }
+    .chart-wrap { position: relative; height: 200px; width: 100%; }
+    .chart-wrap.tall { height: 260px; }
+    .survey-section { width: 100%; max-width: 1100px; margin: 0 auto; padding: 32px 20px; position: relative; z-index: 2; }
+    .survey-section details { width: 100%; }
+    .survey-section summary { cursor: pointer; display: inline-flex; align-items: center; gap: 10px; font-family: "Instrument Serif", serif; font-size: 1.6rem; font-weight: 400; color: var(--ink); padding: 16px 28px; border-radius: 999px; background: radial-gradient(circle at 18% 0%, rgba(255, 255, 255, 0.50), transparent 38%), linear-gradient(135deg, rgba(241, 154, 220, 0.35), rgba(123, 226, 239, 0.38)), rgba(255, 255, 255, 0.09); border: 1px solid rgba(255, 255, 255, 0.64); backdrop-filter: blur(26px) saturate(205%); box-shadow: inset 0 1px 0 rgba(255, 255, 255, 0.84), 0 0 18px rgba(241, 154, 220, 0.24), 0 16px 38px rgba(73, 48, 67, 0.11); transition: transform 180ms ease; }
+    .survey-section summary:hover { transform: translateY(-2px); }
+    .survey-section summary::marker { color: var(--pink); }
+    .survey-section .pill { margin-bottom: 8px; }
+    @media (max-width: 768px) { .slide { padding: 40px 24px; } .grid-2, .grid-3, .grid-4, .problem-list { grid-template-columns: 1fr; } .nav { bottom: 16px; padding: 8px 14px; gap: 8px; } .chart-wrap { height: 160px; } .chart-wrap.tall { height: 200px; } .survey-section { padding: 24px 12px; } .survey-section summary { font-size: 1.2rem; padding: 12px 20px; } }
+  </style>
+</head>
+<body>
+
+<div class="logo"><img src="assets/libre-patas-logo-main.png" alt="LibrePatas" style="height:18px;width:auto;display:block;"></div>
+<div class="slide-counter"><span id="current">1</span> / 5</div>
+
+<!-- SLIDE 1: HERO -->
+<section class="slide slide-1" id="slide-1">
+  <div class="content">
+    <span class="pill"><img src="assets/libre-patas-logo-main.png" alt="" style="height:14px;width:auto;display:block;margin:-1px 0;"> Hackathon Project</span>
+    <h1 class="title">Real animals.<br>Verified care.</h1>
+    <p class="subtitle">LibrePatas helps municipalities and animal welfare organizations verify that a specific animal received a specific procedure — with biometric identity and Ethereum-backed proof of care.</p>
+    <div class="actions">
+      <a href="#slide-2" class="btn btn-primary">See the problem →</a>
+      <a href="#slide-3" class="btn btn-secondary">How it works</a>
+    </div>
+    <div class="info-row">
+      <div class="info-item"><div class="info-label">Identity</div><div class="info-value">AnimalID</div></div>
+      <div class="info-item"><div class="info-label">Verification</div><div class="info-value">Nose Print</div></div>
+      <div class="info-item"><div class="info-label">Proof</div><div class="info-value">Ethereum</div></div>
+    </div>
+    <div style="margin-top:32px;display:flex;align-items:center;justify-content:center;gap:16px;">
+      <img src="assets/dog-section-hero-intro.png" alt="Dog illustration" style="max-width:200px;height:auto;border-radius:20px;box-shadow:0 8px 30px rgba(73,48,67,0.12);">
+      <img src="assets/libre-patas-logo-main.png" alt="LibrePatas" style="max-width:200px;height:auto;border-radius:20px;box-shadow:0 8px 30px rgba(73,48,67,0.12);display:block;">
+      <img src="assets/dog2-section-hero.png" alt="Second dog" style="max-width:200px;height:auto;border-radius:20px;box-shadow:0 8px 30px rgba(73,48,67,0.12);display:block;">
+    </div>
+  </div>
+</section>
+
+<!-- COLLAPSIBLE SURVEY (between slide 1 and slide 2) -->
+<section style="min-height:auto;padding:40px 20px;position:relative;background:linear-gradient(180deg,#fff7f1,#fff8f4);">
+  <div class="survey-section">
+    <details>
+      <summary> <span class="pill" style="margin:0;">11 clinics surveyed</span> Click to see the data we collected</summary>
+      <div style="margin-top:24px;">
+        <p style="text-align:center;color:var(--ink-muted);margin-bottom:16px;font-size:15px;">Veterinary professionals in Uruguay — all from private clinics (91%)</p>
+        <div class="grid-4">
+          <div class="card" style="text-align:left;">
+            <div class="card-title">Respondents</div>
+            <div class="chart-wrap tall"><canvas id="chartProfession"></canvas></div>
+          </div>
+          <div class="card" style="text-align:left;">
+            <div class="card-title">Software used</div>
+            <div class="chart-wrap tall"><canvas id="chartSoftware"></canvas></div>
+          </div>
+          <div class="card" style="text-align:left;">
+            <div class="card-title">Nose print awareness</div>
+            <div class="chart-wrap tall"><canvas id="chartNosePrint"></canvas></div>
+          </div>
+          <div class="card" style="text-align:left;">
+            <div class="card-title">Identity verification methods</div>
+            <div class="chart-wrap tall"><canvas id="chartVerification"></canvas></div>
+          </div>
+          <div class="card" style="text-align:left;">
+            <div class="card-title">Incomplete records?</div>
+            <div class="chart-wrap tall"><canvas id="chartIncomplete"></canvas></div>
+          </div>
+          <div class="card" style="text-align:left;">
+            <div class="card-title">Suspected fake documents?</div>
+            <div class="chart-wrap tall"><canvas id="chartFakeDocs"></canvas></div>
+          </div>
+          <div class="card" style="text-align:left;">
+            <div class="card-title">Owner hid/falsified info?</div>
+            <div class="chart-wrap tall"><canvas id="chartOwnerHide"></canvas></div>
+          </div>
+          <div class="card" style="text-align:left;">
+            <div class="card-title">Avg score (1-10)</div>
+            <div class="chart-wrap tall"><canvas id="chartAverages"></canvas></div>
+          </div>
+        </div>
+      </div>
+    </details>
+  </div>
+</section>
+
+<!-- SLIDE 2: PROBLEM STATEMENT -->
+<section class="slide slide-2" id="slide-2">
+  <div class="content left" style="max-width:860px;">
+    <span class="pill">The Trust Problem</span>
+    <div style="display:flex;align-items:center;gap:24px;flex-wrap:wrap;">
+      <h1 class="title" style="text-align:left;margin-bottom:0;">Every Act of Care.<br>Verifiable.</h1>
+      <img src="assets/Luna-intro.png" alt="Luna" style="max-width:240px;height:auto;border-radius:20px;box-shadow:0 8px 30px rgba(73,48,67,0.12);">
+    </div>
+    <div class="divider left"></div>
+    <p class="subtitle left" style="max-width:680px;">Veterinary clinics rely on fragmented records and manual identification. Without a verifiable animal identity, medical histories become difficult to trust, duplicate records emerge, and continuity of care is compromised.</p>
+    <div class="grid-2">
+      <div><ul class="problem-list"><li>Photos reused across multiple cases</li><li>Duplicate registrations go undetected</li><li>Similar animals substituted for registered ones</li><li>Fake clinic confirmations</li><li>Documents altered after verification</li><li>Scattered records across organizations</li></ul></div>
+      <div><div class="card"><div class="card-title">Who is affected</div><div class="card-text"><span class="tag">Shelters</span><span class="tag green">Veterinarians</span><span class="tag orange">Volunteers</span><span class="tag">Municipalities</span><span class="tag green">Donors</span><span class="tag orange">NGOs</span><br><br>A centralized database requires trust in a single owner. LibrePatas creates a shared verifiable layer between all participants.</div></div></div>
+    </div>
+    <div class="grid-2" style="margin-top:24px;">
+      <div class="card" style="text-align:left;">
+        <div class="card-title">What Ethereum proves</div>
+        <div class="card-text">Ethereum does not identify the animal. It proves who confirmed a claim, what evidence commitment was referenced, and whether the published history changed.</div>
+      </div>
+      <div class="card" style="text-align:left;">
+        <div class="card-title">What LibrePatas provides</div>
+        <div class="card-text">LibrePatas does not use blockchain to prove physical truth. It provides verifiable accountability by showing who issued a claim, whether they were authorized to do so, what evidence and policies supported it, how it was corrected or revoked over time, and whether the off-chain records remain consistent with the immutable commitments stored on-chain.</div>
+      </div>
+    </div>
+    <div class="actions left" style="margin-top:28px;">
+      <a href="#slide-3" class="btn btn-primary">Why blockchain? →</a>
+      <a href="#slide-1" class="btn btn-secondary">Back</a>
+    </div>
+  </div>
+</section>
+
+<!-- SLIDE 3: WHY BLOCKCHAIN -->
+<section class="slide slide-3" id="slide-3">
+  <div class="content left" style="max-width:1000px;">
+    <span class="pill">Why Blockchain + Nose Print</span>
+    <div style="display:flex;align-items:flex-start;gap:32px;flex-wrap:wrap;">
+      <div style="flex:1;min-width:280px;">
+        <h1 class="title" style="font-size:clamp(2.8rem,5vw,4.2rem);margin-bottom:16px;text-align:left;">Identity + Blockchain<br>for every animal</h1>
+        <div class="divider left"></div>
+        <p class="subtitle left" style="max-width:640px;">A centralized database isn't enough — one party controls the data. LibrePatas uses Ethereum to anchor proof, not store sensitive records.</p>
+      </div>
+      <img src="assets/Luna-2.png" alt="Luna" style="max-width:260px;height:auto;border-radius:20px;box-shadow:0 8px 30px rgba(73,48,67,0.12);">
+    </div>
+    <div class="grid-3">
+      <div class="card" style="text-align:left;position:relative;overflow:hidden;"><div class="card-icon">1</div><div class="card-title">Off-chain</div><div class="card-text">Photos, medical records, personal data, and biometric samples stay private in encrypted storage.</div><img src="assets/dog-Off-chain-card.png" alt="" style="position:absolute;top:0;right:0;max-width:90px;height:auto;opacity:0.5;pointer-events:none;"></div>
+      <div class="card" style="text-align:left;position:relative;overflow:hidden;"><div class="card-icon">2</div><div class="card-title">On-chain</div><div class="card-text">Only proof hashes, timestamps, and attestation UIDs are stored on Ethereum — immutable and publicly verifiable.</div><img src="assets/dog-On-chain-card.png" alt="" style="position:absolute;top:0;right:0;max-width:90px;height:auto;opacity:0.5;pointer-events:none;"></div>
+      <div class="card" style="text-align:left;position:relative;overflow:hidden;"><div class="card-icon">3</div><div class="card-title">Proof of Care</div><div class="card-text">An NFT-like immutable certificate that proves who confirmed the procedure and what evidence was used — without exposing privacy.</div><img src="assets/dog-Proof-of-care-card.png" alt="" style="position:absolute;top:0;right:0;max-width:90px;height:auto;opacity:0.5;pointer-events:none;"></div>
+    </div>
+    <div class="chain-flow">
+      <span class="chain-step">Photo capture</span><span class="chain-arrow">→</span>
+      <span class="chain-step">Nose print match</span><span class="chain-arrow">→</span>
+      <span class="chain-step">Clinic confirmation</span><span class="chain-arrow">→</span>
+      <span class="chain-step">Ethereum attestation</span><span class="chain-arrow">→</span>
+      <span class="chain-step">Municipal report</span>
+    </div>
+    <div style="margin-top:24px;text-align:left;">
+      <p style="font-size:15px;font-weight:600;margin-bottom:10px;color:var(--ink);">LibrePatas does not:</p>
+      <ul style="list-style:none;display:grid;gap:6px;">
+        <li style="display:flex;align-items:flex-start;gap:8px;font-size:14px;line-height:1.6;color:var(--ink-muted);"><span style="width:4px;height:4px;min-width:4px;border-radius:50%;margin-top:8px;background:linear-gradient(135deg,var(--pink),var(--cyan));display:inline-block;"></span>sign claims on behalf of veterinary clinics</li>
+        <li style="display:flex;align-items:flex-start;gap:8px;font-size:14px;line-height:1.6;color:var(--ink-muted);"><span style="width:4px;height:4px;min-width:4px;border-radius:50%;margin-top:8px;background:linear-gradient(135deg,var(--pink),var(--cyan));display:inline-block;"></span>unilaterally authorize organizations</li>
+        <li style="display:flex;align-items:flex-start;gap:8px;font-size:14px;line-height:1.6;color:var(--ink-muted);"><span style="width:4px;height:4px;min-width:4px;border-radius:50%;margin-top:8px;background:linear-gradient(135deg,var(--pink),var(--cyan));display:inline-block;"></span>make municipal or regulatory decisions</li>
+        <li style="display:flex;align-items:flex-start;gap:8px;font-size:14px;line-height:1.6;color:var(--ink-muted);"><span style="width:4px;height:4px;min-width:4px;border-radius:50%;margin-top:8px;background:linear-gradient(135deg,var(--pink),var(--cyan));display:inline-block;"></span>determine the canonical blockchain state without the Program Authority</li>
+        <li style="display:flex;align-items:flex-start;gap:8px;font-size:14px;line-height:1.6;color:var(--ink-muted);"><span style="width:4px;height:4px;min-width:4px;border-radius:50%;margin-top:8px;background:linear-gradient(135deg,var(--pink),var(--cyan));display:inline-block;"></span>act as an irreplaceable relayer — it can be replaced by another relayer implementation</li>
+      </ul>
+      <details style="margin-top:16px;">
+        <summary style="cursor:pointer;display:inline-flex;align-items:center;gap:8px;font-size:14px;font-weight:500;color:var(--ink-muted);padding:8px 16px;border-radius:999px;background:radial-gradient(circle at 18% 0%,rgba(255,255,255,0.50),transparent 38%),linear-gradient(135deg,rgba(241,154,220,0.28),rgba(123,226,239,0.30)),rgba(255,255,255,0.09);border:1px solid rgba(255,255,255,0.64);backdrop-filter:blur(20px) saturate(160%);">Architecture diagram</summary>
+        <div style="margin-top:12px;">
+          <img src="assets/deepseek_mermaid_20260725_95a25e.png" alt="Architecture diagram" style="max-width:100%;height:auto;border-radius:16px;box-shadow:0 8px 30px rgba(73,48,67,0.12);">
+        </div>
+      </details>
+    </div>
+    <div class="actions" style="margin-top:20px;">
+      <a href="#slide-1" class="btn btn-secondary">Back to start</a>
+    </div>
+  </div>
+</section>
+
+<!-- SLIDE 4: BRAND IDENTITY -->
+<section class="slide slide-4" id="slide-4">
+  <div class="content left" style="max-width:1000px;">
+    <span class="pill">Visual Identity</span>
+    <div style="display:flex;align-items:flex-start;gap:32px;flex-wrap:wrap;">
+      <div style="flex:1;min-width:280px;">
+        <h1 class="title" style="font-size:clamp(2.2rem,4vw,3.6rem);margin-bottom:16px;text-align:left;">A Brand Identity<br>Encoded as a Prompt</h1>
+        <div class="divider left"></div>
+        <p class="text-block" style="margin-bottom:20px;">
+          Glowing, faceless dogs represent abandoned animals that remain unseen and unidentified.
+          Their translucent bodies feel formed from Ethereum light: fragile, anonymous and verifiable.
+        </p>
+        <p class="text-block" style="margin-bottom:20px;">
+          The metaphor reflects the product architecture: sensitive photos, medical records and biometric
+          evidence remain encrypted off-chain, while only hashes and attestations are anchored on Ethereum.
+        </p>
+      </div>
+      <img src="assets/luna-3.png" alt="Luna" style="max-width:300px;height:auto;border-radius:20px;box-shadow:0 8px 30px rgba(73,48,67,0.12);">
+    </div>
+    <div style="display:flex;gap:32px;flex-wrap:wrap;margin-top:24px;">
+      <div class="card" style="flex:1;min-width:240px;position:relative;overflow:hidden;">
+        <div class="card-title">Brand system</div>
+        <div class="card-text">One prompt + one model + one seed = a consistent visual identity</div>
+        <img src="assets/dog-Brand system-card.png" alt="" style="position:absolute;bottom:0;right:0;max-width:80px;height:auto;opacity:0.5;pointer-events:none;">
+      </div>
+      <div class="card" style="flex:1;min-width:240px;position:relative;overflow:hidden;">
+        <div class="card-title">Visual language</div>
+        <div class="card-text">Translucent ghostlike dogs · glowing eyes · saturated gradients · orange and mint haze · soft edges · minimal detail · surreal editorial photography</div>
+        <img src="assets/dog-Visual-language-card.png" alt="" style="position:absolute;bottom:0;right:0;max-width:90px;height:auto;opacity:0.5;pointer-events:none;">
+      </div>
+      <div class="card" style="flex:1;min-width:240px;position:relative;overflow:hidden;">
+        <div class="card-title">Generation</div>
+        <div class="mono">InvokeAI · FLUX.2 Klein 4B<br>40 steps · seed 4160810953</div>
+        <img src="assets/libre-patas-words.png" alt="" style="position:absolute;bottom:0;right:0;max-width:80px;height:auto;opacity:0.5;pointer-events:none;">
+      </div>
+    </div>
+    <div style="display:grid;grid-template-columns:repeat(3,1fr);gap:10px;margin:24px auto 0;max-width:480px;">
+      <img src="assets/Eth-Insta-1.png" alt="" style="width:100%;height:auto;border-radius:12px;box-shadow:0 4px 16px rgba(73,48,67,0.10);">
+      <img src="assets/Eth-Insta-2.png" alt="" style="width:100%;height:auto;border-radius:12px;box-shadow:0 4px 16px rgba(73,48,67,0.10);">
+      <img src="assets/Eth-Insta-3.png" alt="" style="width:100%;height:auto;border-radius:12px;box-shadow:0 4px 16px rgba(73,48,67,0.10);">
+      <img src="assets/Eth-Insta-4.png" alt="" style="width:100%;height:auto;border-radius:12px;box-shadow:0 4px 16px rgba(73,48,67,0.10);">
+      <img src="assets/Eth-Insta-5.png" alt="" style="width:100%;height:auto;border-radius:12px;box-shadow:0 4px 16px rgba(73,48,67,0.10);">
+      <img src="assets/Eth-Insta-6.png" alt="" style="width:100%;height:auto;border-radius:12px;box-shadow:0 4px 16px rgba(73,48,67,0.10);">
+      <img src="assets/Eth-Insta-7.png" alt="" style="width:100%;height:auto;border-radius:12px;box-shadow:0 4px 16px rgba(73,48,67,0.10);">
+      <img src="assets/Eth-Insta-8.png" alt="" style="width:100%;height:auto;border-radius:12px;box-shadow:0 4px 16px rgba(73,48,67,0.10);">
+      <img src="assets/Eth-Insta-9.png" alt="" style="width:100%;height:auto;border-radius:12px;box-shadow:0 4px 16px rgba(73,48,67,0.10);">
+    </div>
+    <div class="actions" style="margin-top:28px;justify-content:center;">
+      <a href="#slide-5" class="btn btn-primary">See the assets →</a>
+      <a href="#slide-3" class="btn btn-secondary">Back</a>
+    </div>
+  </div>
+</section>
+
+<!-- SLIDE 5: 100+ ASSETS -->
+<section class="slide slide-5" id="slide-5">
+  <div class="content left" style="max-width:1000px;">
+    <span class="pill">Production Scale</span>
+    <div style="display:flex;align-items:flex-start;gap:32px;flex-wrap:wrap;">
+      <div style="flex:1;min-width:280px;">
+        <h1 class="title" style="font-size:clamp(2.2rem,4vw,3.6rem);margin-bottom:16px;text-align:left;">100+ Assets.<br>One Visual System.</h1>
+        <div class="divider left"></div>
+        <p class="text-block" style="margin-bottom:20px;">
+          We generated 100+ original brand and social media assets locally, without stock libraries
+          or production costs. The prompt-based identity makes content fast, repeatable and visually consistent.
+        </p>
+        <p class="text-block">
+          Experimental Figma shaders turn campaign messages into bold visual signals.
+        </p>
+        <p class="text-block" style="margin-top:12px;font-weight:600;">Our emotional tone of voice in social media:</p>
+      </div>
+      <img src="assets/libre-patas-logo-main.png" alt="LibrePatas" style="max-width:260px;height:auto;border-radius:20px;box-shadow:0 8px 30px rgba(73,48,67,0.12);">
+    </div>
+    <ul style="list-style:none;margin-top:24px;display:grid;gap:12px;">
+      <li style="display:flex;align-items:center;gap:16px;">
+        <span style="font-family:'Instrument Serif',serif;font-size:clamp(1.6rem,3vw,2.4rem);font-weight:400;background:linear-gradient(110deg,#35212f,#d76e3f,#279d98,#35212f);-webkit-background-clip:text;background-clip:text;color:transparent;">HELP ME</span>
+      </li>
+      <li style="display:flex;align-items:center;gap:16px;">
+        <span style="font-family:'Instrument Serif',serif;font-size:clamp(1.6rem,3vw,2.4rem);font-weight:400;background:linear-gradient(110deg,#35212f,#d76e3f,#279d98,#35212f);-webkit-background-clip:text;background-clip:text;color:transparent;">I JUST NEED A FAMILY</span>
+      </li>
+      <li style="display:flex;align-items:center;gap:16px;">
+        <span style="font-family:'Instrument Serif',serif;font-size:clamp(1.6rem,3vw,2.4rem);font-weight:400;background:linear-gradient(110deg,#35212f,#d76e3f,#279d98,#35212f);-webkit-background-clip:text;background-clip:text;color:transparent;">I'M NOT INVISIBLE</span>
+      </li>
+    </ul>
+    <p class="text-block" style="margin-top:20px;font-size:14px;">
+      Soft ghostlike animals combined with loud typography create a visual language that feels
+      futuristic, emotional and memorable. <strong>Result:</strong> faster production and a scalable identity
+      for product, website and social media.
+    </p>
+    <div class="actions left" style="margin-top:20px;">
+      <a href="#slide-1" class="btn btn-primary">Back to start</a>
+      <a href="#slide-4" class="btn btn-secondary">Back</a>
+    </div>
+  </div>
+</section>
+
+<!-- NAVIGATION -->
+<nav class="nav">
+  <a href="#slide-1" class="active" onclick="goSlide(1)">1</a>
+  <a href="#slide-2" onclick="goSlide(2)">2</a>
+  <a href="#slide-3" onclick="goSlide(3)">3</a>
+  <a href="#slide-4" onclick="goSlide(4)">4</a>
+  <a href="#slide-5" onclick="goSlide(5)">5</a>
+</nav>
+
+<script>
+function updateCounter() {
+  const hash = window.location.hash || '#slide-1';
+  const num = parseInt(hash.replace('#slide-', '')) || 1;
+  document.getElementById('current').textContent = num;
+  document.querySelectorAll('.nav a').forEach(a => a.classList.remove('active'));
+  const activeLink = document.querySelector('.nav a[href="#slide-' + num + '"]');
+  if (activeLink) activeLink.classList.add('active');
+}
+function goSlide(n) { window.location.hash = 'slide-' + n; updateCounter(); }
+window.addEventListener('hashchange', updateCounter);
+updateCounter();
+
+const ink = '#21161f';
+const muted = 'rgba(33,22,31,0.68)';
+const peach = '#F5935A';
+const mint = '#ABE9E1';
+const pink = '#F19ADC';
+const cyan = '#7BE2EF';
+
+Chart.defaults.color = muted;
+Chart.defaults.font.family = "Inter, ui-sans-serif, sans-serif";
+
+new Chart(document.getElementById('chartProfession'), {
+  type: 'pie',
+  data: { labels: ['Veterinario/a 45%', 'Auxiliar 27%', 'Estudiante 18%', 'No resp. 9%'], datasets: [{ data: [45,27,18,9], backgroundColor: [pink, cyan, mint, peach], borderWidth: 0 }] },
+  options: { responsive: true, maintainAspectRatio: false, plugins: { legend: { position: 'bottom', labels: { boxWidth: 12, padding: 8, font: { size: 11 } } }, tooltip: { callbacks: { label: ctx => ctx.parsed + '%' } } } }
+});
+
+new Chart(document.getElementById('chartSoftware'), {
+  type: 'bar',
+  data: { labels: ['Manual', 'RedVet', 'Vetter', 'Gvet', 'My Vete', 'Fact.Exp', 'Ninguno'], datasets: [{ data: [18,18,18,18,9,9,9], backgroundColor: [pink, cyan, mint, peach, pink, cyan, mint], borderWidth: 0, borderRadius: 6 }] },
+  options: { indexAxis: 'y', responsive: true, maintainAspectRatio: false, plugins: { legend: { display: false }, tooltip: { callbacks: { label: ctx => ctx.parsed + '%' } } }, scales: { x: { grid: { display: false }, max: 25, ticks: { callback: v => v + '%' } }, y: { grid: { display: false }, ticks: { font: { size: 11 } } } } }
+});
+
+new Chart(document.getElementById('chartNosePrint'), {
+  type: 'pie',
+  data: { labels: ["Don't know 64%", 'Know no use 27%', 'Know & use 0%'], datasets: [{ data: [64,27,0], backgroundColor: [muted, pink, cyan], borderWidth: 0 }] },
+  options: { responsive: true, maintainAspectRatio: false, plugins: { legend: { position: 'bottom', labels: { boxWidth: 12, padding: 8, font: { size: 11 } } }, tooltip: { callbacks: { label: ctx => ctx.parsed + '%' } } } }
+});
+
+new Chart(document.getElementById('chartVerification'), {
+  type: 'bar',
+  data: {
+    labels: ['Owner info', 'Health booklet', 'Microchip', 'Phys. descrip.'],
+    datasets: [{ data: [82,73,55,18], backgroundColor: [pink, cyan, mint, peach], borderWidth: 0, borderRadius: 6 }]
+  },
+  options: { indexAxis: 'y', responsive: true, maintainAspectRatio: false, plugins: { legend: { display: false }, tooltip: { callbacks: { label: ctx => ctx.parsed + '%' } } }, scales: { x: { grid: { display: false }, max: 100, ticks: { callback: v => v + '%' } }, y: { grid: { display: false }, ticks: { font: { size: 11 } } } } }
+});
+
+new Chart(document.getElementById('chartIncomplete'), {
+  type: 'pie',
+  data: { labels: ['Yes 73%', 'No 18%', 'No resp. 9%'], datasets: [{ data: [73,18,9], backgroundColor: [peach, mint, muted], borderWidth: 0 }] },
+  options: { responsive: true, maintainAspectRatio: false, plugins: { legend: { position: 'bottom', labels: { boxWidth: 12, padding: 8, font: { size: 11 } } }, tooltip: { callbacks: { label: ctx => ctx.parsed + '%' } } } }
+});
+
+new Chart(document.getElementById('chartFakeDocs'), {
+  type: 'pie',
+  data: { labels: ['Yes 45%', 'No 45%', 'No resp. 9%'], datasets: [{ data: [45,45,9], backgroundColor: [peach, mint, muted], borderWidth: 0 }] },
+  options: { responsive: true, maintainAspectRatio: false, plugins: { legend: { position: 'bottom', labels: { boxWidth: 12, padding: 8, font: { size: 11 } } }, tooltip: { callbacks: { label: ctx => ctx.parsed + '%' } } } }
+});
+
+new Chart(document.getElementById('chartOwnerHide'), {
+  type: 'pie',
+  data: { labels: ['Several times 27%', 'Sometimes 36%', 'No 36%'], datasets: [{ data: [27,36,36], backgroundColor: [peach, '#d76e3f', mint], borderWidth: 0 }] },
+  options: { responsive: true, maintainAspectRatio: false, plugins: { legend: { position: 'bottom', labels: { boxWidth: 12, padding: 8, font: { size: 11 } } }, tooltip: { callbacks: { label: ctx => ctx.parsed + '%' } } } }
+});
+
+new Chart(document.getElementById('chartAverages'), {
+  type: 'bar',
+  data: {
+    labels: ['Photo-ID tool usefulness', 'Immutable history value', 'Trust in other clinics', 'Ease of cross-org access'],
+    datasets: [{ data: [7.1, 7.5, 6.0, 4.9], backgroundColor: [pink, cyan, mint, peach], borderWidth: 0, borderRadius: 6 }]
+  },
+  options: { indexAxis: 'y', responsive: true, maintainAspectRatio: false, plugins: { legend: { display: false } }, scales: { x: { grid: { display: false }, min: 0, max: 10, ticks: { stepSize: 2 } }, y: { grid: { display: false }, ticks: { font: { size: 11 } } } } }
+});
+</script>
+
+</body>
+</html>
